@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fresh Success Eligibility Lookup</title>
+<meta name="description" content="Look up a California community college program or course to see whether it is Fresh Success eligible.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to the lookup</a>
+<header class="top">
+  <div class="wrap">
+    <p class="eyebrow">For participating colleges</p>
+    <h1>Fresh Success Eligibility Lookup</h1>
+    <p class="lede">Pick your college, then type the name of a program or course. You do not need the official title. The tool finds the closest matches and shows whether each one is Fresh Success eligible, and why.</p>
+  </div>
+</header>
+
+<main id="main" class="wrap">
+  <p class="asof" id="asof" role="status">Loading data&hellip;</p>
+  <div id="loadError" class="alert" hidden></div>
+
+  <section class="card" aria-labelledby="s1">
+    <h2 id="s1"><span class="num" aria-hidden="true">1</span> Choose your college</h2>
+    <div id="pickWrap">
+      <label for="collegeQ">Type your college name, nickname or acronym (for example &ldquo;VVC&rdquo; or &ldquo;Trade Tech&rdquo;)</label>
+      <input id="collegeQ" type="text" autocomplete="off" spellcheck="false">
+      <p class="hint" id="collegeCount" aria-live="polite"></p>
+      <ul id="collegeList" class="clist"></ul>
+    </div>
+    <div id="chosen" hidden>
+      <p class="chosen"><span class="lbl">College:</span> <strong id="chosenName"></strong>
+        <button type="button" class="link" id="changeCollege">Change college</button></p>
+    </div>
+  </section>
+
+  <section class="card" id="step2" aria-labelledby="s2" hidden>
+    <h2 id="s2"><span class="num" aria-hidden="true">2</span> What do you want to check?</h2>
+    <fieldset class="seg">
+      <legend class="sr">Program or course</legend>
+      <input type="radio" name="kind" id="kProgram" value="programs" checked><label for="kProgram">A program <span>(degree or certificate)</span></label>
+      <input type="radio" name="kind" id="kCourse" value="courses"><label for="kCourse">A course</label>
+    </fieldset>
+
+    <h2 id="s3" class="h3"><span class="num" aria-hidden="true">3</span> Type the name</h2>
+    <form id="searchForm" role="search" autocomplete="off">
+      <label for="q" id="qLabel">Program name</label>
+      <div class="row">
+        <input id="q" type="text" spellcheck="false" autocomplete="off">
+        <button type="submit" class="btn">Look up</button>
+      </div>
+      <p class="hint" id="qHint">Partial names, abbreviations and small typos are fine, for example &ldquo;welding&rdquo; or &ldquo;intro to accounting&rdquo;. You can also search by course number, such as &ldquo;ENGL 101&rdquo;.</p>
+    </form>
+  </section>
+
+  <section id="results" aria-labelledby="rh" hidden>
+    <h2 id="rh" class="resh">Results</h2>
+    <p id="resSummary" class="summary" role="status" aria-live="polite"></p>
+    <div id="weak" class="alert warn" hidden></div>
+    <div id="cards"></div>
+    <p><button type="button" class="btn secondary" id="more" hidden>Show more matches</button></p>
+    <aside class="note" id="handbookNote" hidden>
+      <h3>A result of &ldquo;Not eligible&rdquo; is not always the final word</h3>
+      <p>This lookup checks the state&rsquo;s curriculum inventory codes only. The Fresh Success Handbook (Part IV, pp. 21&ndash;22) also lists other permissible courses, for example courses that are required, a prerequisite, recommended or an elective in a student&rsquo;s declared CTE program, career-oriented counseling and basic skills courses (including TOP codes 4930 and 4931), and approved customized courses of study. If a course does not pass here but you think it may qualify through one of those routes, confirm with the Foundation for California Community Colleges.</p>
+    </aside>
+    <p class="noprint"><button type="button" class="btn secondary" onclick="window.print()">Print these results</button></p>
+  </section>
+
+  <section class="card" aria-labelledby="how">
+    <h2 id="how">How eligibility is decided</h2>
+    <details>
+      <summary>Programs</summary>
+      <table>
+        <caption class="sr">Program eligibility rules</caption>
+        <thead><tr><th scope="col">What the tool checks</th><th scope="col">Eligible when</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">TOP code</th><td>The TOP code has an asterisk (*). An asterisk marks a career technical education (CTE) program.</td></tr>
+          <tr><th scope="row">Status</th><td>The program is Active or Approved. Inactive, Teachout Only, Draft, Revision and Review programs are not eligible.</td></tr>
+        </tbody>
+      </table>
+    </details>
+    <details>
+      <summary>Courses</summary>
+      <table>
+        <caption class="sr">Course eligibility rules</caption>
+        <thead><tr><th scope="col">What the tool checks</th><th scope="col">Eligible when</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Status</th><td>The course is Active. Only active courses are eligible.</td></tr>
+          <tr><th scope="row">TOP code</th><td>The TOP code has an asterisk (*), which marks a CTE course.</td></tr>
+          <tr><th scope="row">SAM priority code</th><td>A, B or C: occupational, passes. D (Possibly Occupational): shows a caution because the course may or may not be eligible; with an asterisk in the TOP code it is likely eligible. E (Non-occupational): not eligible.</td></tr>
+          <tr><th scope="row">Noncredit category</th><td>Applies to noncredit courses only. Eligible categories: A (English as a Second Language), C (Elementary and Secondary Basic Skills), I (Short-term Vocational) and J (Workforce Preparation). Not eligible: B (Citizenship for Immigrants), D (Health and Safety), E (Courses for Persons with Substantial Disabilities), F (Parenting), G (Home Economics), H (Courses for Older Adults). Credit courses are not judged on this item.</td></tr>
+        </tbody>
+      </table>
+      <p class="small">A course must pass every check. If a code is missing or not recognized, the tool says &ldquo;Cannot determine&rdquo; instead of guessing.</p>
+    </details>
+    <details>
+      <summary>Where the code names come from</summary>
+      <p class="small">Code names are from the California Community Colleges Chancellor&rsquo;s Office Data Element Dictionary:
+        <a href="https://webdata.cccco.edu/ded/cb/cb09.pdf">CB09 Student Accountability Model (SAM) Priority Code</a> and
+        <a href="https://webdata.cccco.edu/ded/2024/cb22.pdf">CB22 Noncredit Category</a>.
+        Program and course records come from the Chancellor&rsquo;s Office Curriculum Inventory (COCI).</p>
+    </details>
+    <details>
+      <summary>How current is this information?</summary>
+      <p class="small" id="currency"></p>
+    </details>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>This tool supports planning and eligibility screening. The data comes from COCI exports, and colleges should confirm any funding decision with the Foundation for California Community Colleges. If a result looks wrong, contact your Fresh Success implementation coach.</p>
+    <p>Developed by Educational Management Resources Group (EMRG).</p>
+  </div>
+</footer>
+
+<script src="assets/eligibility.js"></script>
+<script src="assets/search.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
